@@ -4,6 +4,8 @@ This is a custom bot for [Asana](https://asana.com) that subscribes to projects 
 
 It is designed to be deployed in [Netlify](https://netlify.com)'s Lambda functions. The button bellow will make your life easier but if you're keen to know more [here's a getting starter guide](https://www.netlify.com/docs/). And if you want to start from scratch [this blog post](https://travishorn.com/netlify-lambda-functions-from-scratch-1186f61c659e) has a fantastic step-by-step guide.
 
+_Note:_ if deployed via Netlify, please re-deploy via the settings after adding your environment variables.
+
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/rubengarciam/asana-bot)
 
 ## Bug, Feature Requests
@@ -14,14 +16,28 @@ You can request a new feature or submit a bug [through this form :)](https://for
 
 #### New Task
 
-- if has no assignee, the task is assigned to the owner of the project
-- if has no due date, the task is assigned a default due date of 2 weeks from the creation date
+- if it has no assignee, the task is assigned to the owner of the project
+- if it has no due date, the task is assigned a default due date of 2 weeks from the creation date
 
-#### [In development]
+#### Natural Language
 
-- Make the due date configurable as an environment variable
-- Mark a task as completed when moved to the _Done_ board
-- Move the task to the _Done_ board when marked as completed
+The bot understand the following natural language if included in the task's name
+
+Priority:
+- _!!!_ = high
+- _!!_ = medium
+- _!_ = low
+
+Due Dates:
+- _#today_
+- _#tomorrow_
+- _#week_ = a week from today
+- _#month_ = a month from today
+
+#### Task Completed
+
+- Marks a task as completed when moved to the _Done_ board
+- Moves the task to the _Done_ board when marked as completed
 
 ## Configuration
 

@@ -1,20 +1,24 @@
 const axios = require('axios')
 const qs = require('querystring')
-const { TOKEN, SECTION_DONE } = process.env
+const { TOKEN } = process.env
 
 const ASANA_URL = "https://app.asana.com/api/1.0/"
 const TASK_URL = ASANA_URL + "tasks/"
 const PROJECT_URL = ASANA_URL + "projects/"
 const SECTIONS_URL = ASANA_URL + "sections/"
 
-const PRIORITY_HIGH = "!!!"
-const PRIORITY_MEDIUM = "!!"
-const PRIORITY_LOW = "!"
+const priority = {
+  high: "!!!",
+  medium: "!!",
+  low: "!"
+}
 
-const DUE_TODAY = "#today"
-const DUE_TOMORROW = "#tomorrow"
-const DUE_NEXTWEEK = "#week"
-const DUE_NEXTMONTH = "#month"
+const due = {
+  today: "#today",
+  tomorrow: "#tomorrow",
+  nextWeek: "#week",
+  nextMonth: "#month"
+}
 
 function getProjectOwner (project, callback) {
   let url = PROJECT_URL + project
@@ -119,19 +123,19 @@ function setProperties (task) {
     var today = new Date()
     today = new Date(today.getFullYear(), today.getMonth(), today.getDate()-1) // fix offset +1
     var dueDate = null
-    if (task.name.includes(DUE_TODAY)) {
+    if (task.name.includes(due.today)) {
       // dueDate = today
       dueDate = new Date(Date.now())
-      name = name.replace(DUE_TODAY,"")
-    } else if (task.name.includes(DUE_TOMORROW)) {
+      name = name.replace(due.today,"")
+    } else if (task.name.includes(due.tomorrow)) {
       dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1)
-      name = name.replace(DUE_TOMORROW,"")
-    } else if (task.name.includes(DUE_NEXTWEEK)) {
+      name = name.replace(due.tomorrow,"")
+    } else if (task.name.includes(due.nextWeek)) {
       dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7)
-      name = name.replace(DUE_NEXTWEEK,"")
-    }  else if (task.name.includes(DUE_NEXTMONTH)) {
+      name = name.replace(due.nextWeek,"")
+    }  else if (task.name.includes(due.nextMonth)) {
       dueDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate())
-      name = name.replace(DUE_NEXTMONTH,"")
+      name = name.replace(due.nextMonth,"")
     } else {
       dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+14)
     }
@@ -140,25 +144,22 @@ function setProperties (task) {
   }
 
   // priority
-  var priority = null
+  var priorityID = null
 
-  if (task.name.includes(PRIORITY_HIGH)) {
-    priority = task.custom_fields[0].enum_options[0].gid
-    name = name.replace(PRIORITY_HIGH,"")
-  } else if (task.name.includes(PRIORITY_MEDIUM)) {
-    priority = task.custom_fields[0].enum_options[1].gid
-    name = name.replace(PRIORITY_MEDIUM,"")
-  } else if (task.name.includes(PRIORITY_LOW)) {
-    priority = task.custom_fields[0].enum_options[2].gid
-    name = name.replace(PRIORITY_LOW,"")
+  if (task.name.includes(priority.high)) {
+    priorityID = task.custom_fields[0].enum_options[0].gid
+    name = name.replace(priority.high,"")
+  } else if (task.name.includes(priority.medium)) {
+    priorityID = task.custom_fields[0].enum_options[1].gid
+    name = name.replace(priority.medium,"")
+  } else if (task.name.includes(priority.low)) {
+    priorityID = task.custom_fields[0].enum_options[2].gid
+    name = name.replace(priority.low,"")
   }
-  if (priority !== null) {
+  if (priorityID !== null) {
     let customFieldId = task.custom_fields[0].gid
-    let priorityJSON = {
-      customFieldId: priority
-    }
     update.data.custom_fields = {
-      '923557890290112': priority
+      '923557890290112': priorityID
     }
     hasChanged = true
   }
@@ -221,7 +222,7 @@ exports.handler = function (event, context, callback) {
 
         // if task is completed
         if (task.completed) {
-          if (task.memberships[0].section.id !== SECTION_DONE) {
+          if (task.memberships[0].section.name !== "Done") {
               moveToSectionDone(task)
           }
           return
@@ -229,7 +230,6 @@ exports.handler = function (event, context, callback) {
 
         // if task is moved to the completed section
         if (!task.completed && (task.memberships[0].section.name === "Done")) {
-          console.log("COMPLETING TASK")
           completeTask(task)
           return
         }
