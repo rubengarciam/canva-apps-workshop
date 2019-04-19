@@ -137,8 +137,8 @@ function setProperties (task) {
       dueDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate())
       name = name.replace(due.nextMonth,"")
     } else {
-      let days = name.match(#(.*)days)
-      var regex = /#(.*)days/
+      let regex = /#(.*)days/
+      let days = name.match(regex)
       if (days === null) {
           dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+14)
       } else {
