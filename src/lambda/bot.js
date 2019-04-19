@@ -142,8 +142,8 @@ function setProperties (task) {
       if (days === null) {
           dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+14)
       } else {
-          console.log(days)
           dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(days[1], 10))
+          name = name.replace(regex,"")
       }
     }
     update.data.due_on = dueDate.toISOString().slice(0, 10) // format YYYY-MM-DD
@@ -178,7 +178,6 @@ function setProperties (task) {
   update.data.name = name
 
   let url = TASK_URL + task.id
-  console.log(update.data)
   axios.put(url, update, {
     headers: {
       'Authorization': TOKEN
