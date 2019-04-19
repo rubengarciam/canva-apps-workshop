@@ -142,6 +142,7 @@ function setProperties (task) {
       if (days === null) {
           dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+14)
       } else {
+          console.log(days)
           dueDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+days[1])
       }
     }
