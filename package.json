@@ -1,5 +1,5 @@
 {
-  "name": "asana-bot",
+  "name": "canva-apps-workshop",
   "version": "0.1.0",
   "description": "",
   "scripts": {
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rubengarciam/asana-bot.git"
+    "url": "git+https://github.com/rubengarciam/canva-apps-workshop.git"
   },
   "author": "@rubengarciam",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rubengarciam/asana-bot.git/issues"
+    "url": "https://github.com/rubengarciam/canva-apps-workshop.git/issues"
   },
-  "homepage": "https://github.com/rubengarciam/asana-bot#readme",
+  "homepage": "https://github.com/rubengarciam/canva-apps-workshop#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "netlify-lambda": "^1.4.3",
